@@ -15,13 +15,13 @@
 --%>
 
 <liferay-ui:organization-search-container-results
+	forceDatabase="<%= true %>"
 	organizationParams="<%= organizationParams %>"
 	parentOrganizationId="<%= OrganizationConstants.ANY_PARENT_ORGANIZATION_ID %>"
-	useIndexer="<%= false %>"
 />
 
 <liferay-ui:search-container-row
-	className="com.liferay.portal.model.Organization"
+	className="com.liferay.portal.kernel.model.Organization"
 	escapedModel="<%= true %>"
 	keyProperty="organizationId"
 	modelVar="organization"

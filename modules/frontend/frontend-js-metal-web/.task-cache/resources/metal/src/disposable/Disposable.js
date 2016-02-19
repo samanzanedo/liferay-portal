@@ -1,14 +1,14 @@
-'use strict'
-
-/**
- * Disposable utility. When inherited provides the `dispose` function to its
- * subclass, which is responsible for disposing of any object references
- * when an instance won't be used anymore. Subclasses should override
- * `disposeInternal` to implement any specific disposing logic.
- * @constructor
- */
-;
 define("frontend-js-metal-web@1.0.0/metal/src/disposable/Disposable", ['exports'], function (exports) {
+	'use strict';
+
+	/**
+  * Disposable utility. When inherited provides the `dispose` function to its
+  * subclass, which is responsible for disposing of any object references
+  * when an instance won't be used anymore. Subclasses should override
+  * `disposeInternal` to implement any specific disposing logic.
+  * @constructor
+  */
+
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
@@ -19,12 +19,22 @@ define("frontend-js-metal-web@1.0.0/metal/src/disposable/Disposable", ['exports'
 		}
 	}
 
-	var Disposable = (function () {
+	var Disposable = function () {
 		function Disposable() {
 			_classCallCheck(this, Disposable);
 
+			/**
+    * Flag indicating if this instance has already been disposed.
+    * @type {boolean}
+    * @protected
+    */
 			this.disposed_ = false;
 		}
+
+		/**
+   * Disposes of this instance's object references. Calls `disposeInternal`.
+   */
+
 
 		Disposable.prototype.dispose = function dispose() {
 			if (!this.disposed_) {
@@ -40,7 +50,7 @@ define("frontend-js-metal-web@1.0.0/metal/src/disposable/Disposable", ['exports'
 		};
 
 		return Disposable;
-	})();
+	}();
 
 	exports.default = Disposable;
 });

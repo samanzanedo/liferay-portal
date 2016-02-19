@@ -18,9 +18,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import com.liferay.sync.engine.documentlibrary.event.Event;
 import com.liferay.sync.engine.filesystem.Watcher;
-import com.liferay.sync.engine.filesystem.util.WatcherRegistry;
+import com.liferay.sync.engine.filesystem.util.WatcherManager;
 import com.liferay.sync.engine.model.SyncAccount;
 import com.liferay.sync.engine.model.SyncFile;
+import com.liferay.sync.engine.service.SyncAccountService;
 import com.liferay.sync.engine.service.SyncFileService;
 import com.liferay.sync.engine.session.Session;
 import com.liferay.sync.engine.session.SessionManager;
@@ -146,8 +147,8 @@ public class BaseJSONHandler extends BaseHandler {
 		if (exception.equals("Authenticated access required") ||
 			exception.equals("java.lang.SecurityException")) {
 
-			retryServerConnection(
-				SyncAccount.UI_EVENT_AUTHENTICATION_EXCEPTION);
+			throw new HttpResponseException(
+				HttpStatus.SC_UNAUTHORIZED, "Authenticated access required");
 		}
 		else if (exception.endsWith("DuplicateLockException")) {
 			SyncFile syncFile = getLocalSyncFile();
@@ -183,8 +184,7 @@ public class BaseJSONHandler extends BaseHandler {
 			Path filePath = Paths.get(syncFile.getFilePathName());
 
 			if (Files.exists(filePath)) {
-				Watcher watcher = WatcherRegistry.getWatcher(
-					getSyncAccountId());
+				Watcher watcher = WatcherManager.getWatcher(getSyncAccountId());
 
 				List<String> deletedFilePathNames =
 					watcher.getDeletedFilePathNames();
@@ -207,6 +207,12 @@ public class BaseJSONHandler extends BaseHandler {
 		else if (exception.endsWith("SyncClientMinBuildException")) {
 			retryServerConnection(
 				SyncAccount.UI_EVENT_MIN_BUILD_REQUIREMENT_FAILED);
+		}
+		else if (exception.endsWith("SyncDeviceActiveException")) {
+			retryServerConnection(SyncAccount.UI_EVENT_SYNC_ACCOUNT_NOT_ACTIVE);
+		}
+		else if (exception.endsWith("SyncDeviceWipeException")) {
+			SyncAccountService.deleteSyncAccount(getSyncAccountId(), false);
 		}
 		else if (exception.endsWith("SyncServicesUnavailableException")) {
 			retryServerConnection(
@@ -280,7 +286,7 @@ public class BaseJSONHandler extends BaseHandler {
 		if (header != null) {
 			Session session = SessionManager.getSession(getSyncAccountId());
 
-			session.setToken(header.getValue());
+			session.addHeader("Sync-JWT", header.getValue());
 		}
 
 		String response = getResponseString(httpResponse);

@@ -14,19 +14,19 @@
 
 package com.liferay.document.library.web.util;
 
+import com.liferay.document.library.kernel.model.DLFolderConstants;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.web.settings.internal.DLPortletInstanceSettings;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileShortcut;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.theme.PortletDisplay;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.PortletDisplay;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
-import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -120,7 +120,7 @@ public class DLBreadcrumbUtil {
 			DLPortletInstanceSettings.getInstance(
 				themeDisplay.getLayout(), portletDisplay.getId());
 
-		data.put("folder-id", dlPortletInstanceSettings.getDefaultFolderId());
+		data.put("folder-id", dlPortletInstanceSettings.getRootFolderId());
 
 		PortalUtil.addPortletBreadcrumbEntry(
 			request, themeDisplay.translate("home"), portletURL.toString(),
@@ -141,7 +141,7 @@ public class DLBreadcrumbUtil {
 
 		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
-		long defaultFolderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
+		long rootFolderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
 
 		boolean ignoreRootFolder = ParamUtil.getBoolean(
 			request, "ignoreRootFolder");
@@ -151,12 +151,12 @@ public class DLBreadcrumbUtil {
 				DLPortletInstanceSettings.getInstance(
 					themeDisplay.getLayout(), portletDisplay.getId());
 
-			defaultFolderId = dlPortletInstanceSettings.getDefaultFolderId();
+			rootFolderId = dlPortletInstanceSettings.getRootFolderId();
 		}
 
 		List<Folder> ancestorFolders = Collections.emptyList();
 
-		if ((folder != null) && (folder.getFolderId() != defaultFolderId)) {
+		if ((folder != null) && (folder.getFolderId() != rootFolderId)) {
 			ancestorFolders = folder.getAncestors();
 
 			int indexOfRootFolder = -1;
@@ -164,7 +164,7 @@ public class DLBreadcrumbUtil {
 			for (int i = 0; i < ancestorFolders.size(); i++) {
 				Folder ancestorFolder = ancestorFolders.get(i);
 
-				if (defaultFolderId == ancestorFolder.getFolderId()) {
+				if (rootFolderId == ancestorFolder.getFolderId()) {
 					indexOfRootFolder = i;
 				}
 			}
@@ -198,7 +198,7 @@ public class DLBreadcrumbUtil {
 		portletURL.setParameter("folderId", String.valueOf(folderId));
 
 		if ((folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) &&
-			(folderId != defaultFolderId)) {
+			(folderId != rootFolderId)) {
 
 			Folder unescapedFolder = folder.toUnescapedModel();
 

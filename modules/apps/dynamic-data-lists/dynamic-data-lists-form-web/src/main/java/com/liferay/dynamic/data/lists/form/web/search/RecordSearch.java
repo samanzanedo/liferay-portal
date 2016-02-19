@@ -15,17 +15,18 @@
 package com.liferay.dynamic.data.lists.form.web.search;
 
 import com.liferay.dynamic.data.lists.form.web.constants.DDLFormPortletKeys;
-import com.liferay.dynamic.data.lists.form.web.util.DDLFormAdminPortletUtil;
 import com.liferay.dynamic.data.lists.model.DDLRecord;
+import com.liferay.dynamic.data.lists.util.comparator.DDLRecordIdComparator;
+import com.liferay.dynamic.data.lists.util.comparator.DDLRecordModifiedDateComparator;
 import com.liferay.portal.kernel.dao.search.DisplayTerms;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.PortalPreferences;
-import com.liferay.portlet.PortletPreferencesFactoryUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +46,27 @@ public class RecordSearch extends SearchContainer<DDLRecord> {
 
 	static {
 		orderableHeaders.put("modified-date", "modified-date");
+	}
+
+	public static OrderByComparator<DDLRecord> getRecordOrderByComparator(
+		String orderByCol, String orderByType) {
+
+		boolean orderByAsc = false;
+
+		if (orderByType.equals("asc")) {
+			orderByAsc = true;
+		}
+
+		OrderByComparator<DDLRecord> orderByComparator = null;
+
+		if (orderByCol.equals("modified-date")) {
+			orderByComparator = new DDLRecordModifiedDateComparator(orderByAsc);
+		}
+		else {
+			orderByComparator = new DDLRecordIdComparator(orderByAsc);
+		}
+
+		return orderByComparator;
 	}
 
 	public RecordSearch(
@@ -86,8 +108,7 @@ public class RecordSearch extends SearchContainer<DDLRecord> {
 			}
 
 			OrderByComparator<DDLRecord> orderByComparator =
-				DDLFormAdminPortletUtil.getRecordOrderByComparator(
-					orderByCol, orderByType);
+				getRecordOrderByComparator(orderByCol, orderByType);
 
 			setOrderableHeaders(orderableHeaders);
 			setOrderByCol(orderByCol);

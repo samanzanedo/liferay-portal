@@ -160,6 +160,10 @@
 
 				instance.list.push(portlet.portletId);
 
+				if (portlet) {
+					portlet.attr('data-qa-id', 'app-loaded');
+				}
+
 				Liferay.fire(
 					'addPortlet',
 					{
@@ -624,6 +628,10 @@
 							onComplete: function(portlet, portletId) {
 								portlet.refreshURL = url;
 
+								if (portlet) {
+									portlet.attr('data-qa-id', 'app-refreshed');
+								}
+
 								Liferay.fire(
 									portlet.portletId + ':portletRefreshed',
 									{
@@ -685,6 +693,7 @@
 			var instance = this;
 
 			var bodyCssClass = options.bodyCssClass;
+			var destroyOnHide = options.destroyOnHide;
 			var namespace = options.namespace;
 			var portlet = options.portlet;
 			var subTitle = options.subTitle;
@@ -714,6 +723,9 @@
 				Liferay.Util.openWindow(
 					{
 						cache: false,
+						dialog: {
+							destroyOnHide: destroyOnHide
+						},
 						dialogIframe: {
 							bodyCssClass: bodyCssClass,
 							id: namespace + 'configurationIframe',

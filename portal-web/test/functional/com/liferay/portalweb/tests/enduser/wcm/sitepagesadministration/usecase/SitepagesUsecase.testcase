@@ -83,9 +83,8 @@
 		</execute>
 
 		<execute macro="Page#add">
-			<var name="page" value="Private Pages" />
 			<var name="pageName" value="Site Page Name" />
-			<var name="siteScopeSelected" value="true" />
+			<var name="sitePagePrivacy" value="Private Pages" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesPages">
@@ -115,9 +114,7 @@
 			<var name="pageName" value="Site Page Name" />
 		</execute>
 
-		<execute macro="ProductMenu#gotoSitesPages">
-			<var name="page" value="Public Pages" />
-		</execute>
+		<execute macro="ProductMenu#gotoPublicPages" />
 
 		<execute macro="SitePage#deletePublicPageCP">
 			<var name="sitePageName" value="Site Page Name" />
@@ -198,7 +195,9 @@
 			<var name="pageName" value="Page Name" />
 		</execute>
 
-		<execute macro="Page#gotoEdit" />
+		<execute macro="ProductMenu#gotoEditPage">
+			<var name="page" value="Page Name" />
+		</execute>
 
 		<execute macro="Page#addFriendlyURLLocalizedPG">
 			<var name="friendlyUrlLocalized" value="de_DE" />
@@ -214,6 +213,10 @@
 		</execute>
 
 		<execute function="AssertConsoleTextNotPresent" value1="java.lang.StringIndexOutOfBoundsException: String index out of range: -1" />
+
+		<execute macro="ProductMenu#gotoEditPage">
+			<var name="page" value="Page Name" />
+		</execute>
 
 		<execute macro="Page#viewPageFriendURLPG">
 			<var name="localizedFriendlyURL" value="/german" />
@@ -657,13 +660,13 @@
 
 		<execute macro="Alert#viewRequestFailedToComplete" />
 
-		<execute function="AssertTextEquals" locator1="Message#ERROR_2" value1="You do not have the required permissions." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="You do not have the required permissions." />
 
 		<execute function="Open" locator1="${messageBoardsThreadURL}" />
 
 		<execute macro="Alert#viewRequestFailedToComplete" />
 
-		<execute function="AssertTextEquals" locator1="Message#ERROR_2" value1="You do not have the required permissions." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="You do not have the required permissions." />
 	</command>
 
 	<command name="ViewSecureContentAndPageAsSiteMember" priority="3">
@@ -739,7 +742,6 @@
 		</execute>
 
 		<execute macro="Page#add">
-			<var name="page" value="Private Pages" />
 			<var name="pageName" value="Test Private Page" />
 			<var name="siteName" value="Liferay" />
 			<var name="sitePagePrivacy" value="Private" />
@@ -910,7 +912,6 @@
 			<var name="lastPostUserName" value="Test Test" />
 			<var name="messageBoardsThreadURL" value="${messageBoardsThreadURL}" />
 			<var name="postCount" value="1" />
-			<var name="startedByUserName" value="Test Test" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -985,9 +986,9 @@
 		</execute>
 
 		<execute macro="Page#add">
-			<var name="page" value="Private Pages" />
 			<var name="pageName" value="Test Private Page" />
 			<var name="siteName" value="Liferay" />
+			<var name="sitePagePrivacy" value="Private Pages" />
 		</execute>
 
 		<execute macro="Page#add">
@@ -1136,7 +1137,7 @@
 
 		<execute macro="Alert#viewRequestFailedToComplete" />
 
-		<execute function="AssertTextEquals" locator1="Message#ERROR_2" value1="You do not have the required permissions." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="You do not have the required permissions." />
 
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="Blog and Message Board Page" />
@@ -1146,15 +1147,15 @@
 
 		<execute macro="Alert#viewRequestFailedToComplete" />
 
-		<execute function="AssertTextEquals" locator1="Message#ERROR_2" value1="You do not have the required permissions." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="You do not have the required permissions." />
 	</command>
 
 	<command name="WebContentAdministrationSitesPagesPanel" priority="3">
 		<execute macro="Page#add">
 			<var name="componentName" value="Collaboration" />
 			<var name="pageName" value="Panel Test Page" />
-			<var name="pageType" value="Panel" />
 			<var name="portletNameList" value="Blogs,Message Boards" />
+			<var name="sitePageType" value="Panel" />
 		</execute>
 
 		<execute macro="Page#viewPanelPortletListPG">
@@ -1205,7 +1206,6 @@
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
 			<var name="postCount" value="1" />
-			<var name="startedByUserName" value="Test Test" />
 			<var name="threadBody" value="This is Message Boards Thread 1" />
 			<var name="threadSubject" value="Thread 1" />
 		</execute>

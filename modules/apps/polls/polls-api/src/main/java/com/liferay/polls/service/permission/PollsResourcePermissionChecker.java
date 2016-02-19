@@ -17,18 +17,20 @@ package com.liferay.polls.service.permission;
 import com.liferay.polls.constants.PollsPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
+import com.liferay.portal.kernel.security.permission.BaseResourcePermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.security.permission.ResourcePermissionChecker;
-import com.liferay.portlet.exportimport.staging.permission.StagingPermissionUtil;
 
 import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Mika Koivisto
  */
-@Component(immediate = true, property = {"resource.name=com.liferay.polls"})
+@Component(
+	immediate = true,
+	property = {"resource.name=" + PollsResourcePermissionChecker.RESOURCE_NAME}
+)
 public class PollsResourcePermissionChecker
-	implements ResourcePermissionChecker {
+	extends BaseResourcePermissionChecker {
 
 	public static final String RESOURCE_NAME = "com.liferay.polls";
 
@@ -45,16 +47,9 @@ public class PollsResourcePermissionChecker
 	public static boolean contains(
 		PermissionChecker permissionChecker, long groupId, String actionId) {
 
-		Boolean hasPermission = StagingPermissionUtil.hasPermission(
-			permissionChecker, groupId, RESOURCE_NAME, groupId,
-			PollsPortletKeys.POLLS, actionId);
-
-		if (hasPermission != null) {
-			return hasPermission.booleanValue();
-		}
-
-		return permissionChecker.hasPermission(
-			groupId, RESOURCE_NAME, groupId, actionId);
+		return contains(
+			permissionChecker, RESOURCE_NAME, PollsPortletKeys.POLLS, groupId,
+			actionId);
 	}
 
 	@Override

@@ -22,8 +22,8 @@ import com.liferay.dynamic.data.lists.service.permission.DDLRecordSetPermission;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.service.ServiceContext;
 
 import java.util.List;
 import java.util.Locale;
@@ -59,6 +59,23 @@ public class DDLRecordSetServiceImpl extends DDLRecordSetServiceBaseImpl {
 			getPermissionChecker(), recordSetId, ActionKeys.DELETE);
 
 		ddlRecordSetLocalService.deleteRecordSet(recordSetId);
+	}
+
+	@Override
+	public DDLRecordSet fetchRecordSet(long recordSetId)
+		throws PortalException {
+
+		DDLRecordSet recordSet = ddlRecordSetLocalService.fetchRecordSet(
+			recordSetId);
+
+		if (recordSet == null) {
+			return null;
+		}
+
+		DDLRecordSetPermission.check(
+			getPermissionChecker(), recordSet, ActionKeys.VIEW);
+
+		return recordSet;
 	}
 
 	@Override

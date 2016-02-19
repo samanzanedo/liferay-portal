@@ -1,19 +1,11 @@
-'use strict';
+define("frontend-js-metal-web@1.0.0/metal-dropdown/src/Dropdown.soy", ['exports', 'metal-component/src/all/component', 'metal-soy/src/soy'], function (exports, _component, _soy) {
+  'use strict';
 
-function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
-
-define("frontend-js-metal-web@1.0.0/metal-dropdown/src/Dropdown.soy", ['exports', 'metal/src/component/Component', 'metal/src/soy/SoyAop', 'metal/src/soy/SoyRenderer', 'metal/src/soy/SoyTemplates'], function (exports, _Component2, _SoyAop, _SoyRenderer, _SoyTemplates) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
-  var _Component3 = _interopRequireDefault(_Component2);
-
-  var _SoyAop2 = _interopRequireDefault(_SoyAop);
-
-  var _SoyRenderer2 = _interopRequireDefault(_SoyRenderer);
-
-  var _SoyTemplates2 = _interopRequireDefault(_SoyTemplates);
+  var _component2 = _interopRequireDefault(_component);
 
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {
@@ -32,7 +24,7 @@ define("frontend-js-metal-web@1.0.0/metal-dropdown/src/Dropdown.soy", ['exports'
       throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
     }
 
-    return call && ((typeof call === 'undefined' ? 'undefined' : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+    return call && (typeof call === "object" || typeof call === "function") ? call : self;
   }
 
   function _inherits(subClass, superClass) {
@@ -51,32 +43,50 @@ define("frontend-js-metal-web@1.0.0/metal-dropdown/src/Dropdown.soy", ['exports'
     if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
   }
 
-  var Templates = _SoyTemplates2.default.get();
+  var Templates = _soy.SoyTemplates.get();
+  // This file was automatically generated from Dropdown.soy.
+  // Please don't edit this file by hand.
+
+  /**
+   * @fileoverview Templates in namespace Templates.Dropdown.
+   */
 
   if (typeof Templates.Dropdown == 'undefined') {
     Templates.Dropdown = {};
   }
 
-  Templates.Dropdown.content = function (opt_data, opt_ignored, opt_ijData) {
+  /**
+   * @param {Object.<string, *>=} opt_data
+   * @param {(null|undefined)=} opt_ignored
+   * @param {Object.<string, *>=} opt_ijData
+   * @return {!soydata.SanitizedHtml}
+   * @suppress {checkTypes}
+   */
+  Templates.Dropdown.render = function (opt_data, opt_ignored, opt_ijData) {
     return soydata.VERY_UNSAFE.ordainSanitizedHtml('<div id="' + soy.$$escapeHtmlAttribute(opt_data.id) + '" class="dropdown component' + soy.$$escapeHtmlAttribute(opt_data.elementClasses ? ' ' + opt_data.elementClasses : '') + soy.$$escapeHtmlAttribute(opt_data.expanded ? ' open' : '') + '">' + (opt_data.header ? soy.$$escapeHtml(opt_data.header) : '') + Templates.Dropdown.body(opt_data, null, opt_ijData) + '</div>');
   };
-
   if (goog.DEBUG) {
-    Templates.Dropdown.content.soyTemplateName = 'Templates.Dropdown.content';
+    Templates.Dropdown.render.soyTemplateName = 'Templates.Dropdown.render';
   }
 
+  /**
+   * @param {Object.<string, *>=} opt_data
+   * @param {(null|undefined)=} opt_ignored
+   * @param {Object.<string, *>=} opt_ijData
+   * @return {!soydata.SanitizedHtml}
+   * @suppress {checkTypes}
+   */
   Templates.Dropdown.body = function (opt_data, opt_ignored, opt_ijData) {
     return soydata.VERY_UNSAFE.ordainSanitizedHtml('<ul id="' + soy.$$escapeHtmlAttribute(opt_data.id) + '-body" class="dropdown-menu">' + (opt_data.body ? soy.$$escapeHtml(opt_data.body) : '') + '</ul>');
   };
-
   if (goog.DEBUG) {
     Templates.Dropdown.body.soyTemplateName = 'Templates.Dropdown.body';
   }
 
-  Templates.Dropdown.content.params = ["header", "id"];
+  Templates.Dropdown.render.params = ["header", "id"];
   Templates.Dropdown.body.params = ["body", "id"];
 
-  var Dropdown = (function (_Component) {
+  var Dropdown = function (_Component) {
     _inherits(Dropdown, _Component);
 
     function Dropdown() {
@@ -86,13 +96,12 @@ define("frontend-js-metal-web@1.0.0/metal-dropdown/src/Dropdown.soy", ['exports'
     }
 
     return Dropdown;
-  })(_Component3.default);
+  }(_component2.default);
 
   Dropdown.prototype.registerMetalComponent && Dropdown.prototype.registerMetalComponent(Dropdown, 'Dropdown')
-  Dropdown.RENDERER = _SoyRenderer2.default;
 
-  _SoyAop2.default.registerTemplates('Dropdown');
-
+  Dropdown.RENDERER = _soy.SoyRenderer;
+  _soy.SoyAop.registerTemplates('Dropdown');
   exports.default = Dropdown;
 });
 //# sourceMappingURL=Dropdown.soy.js.map

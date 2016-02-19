@@ -1,6 +1,6 @@
-'use strict';
+define("frontend-js-metal-web@1.0.0/metal/src/array/array", ['exports', '../core'], function (exports, _core) {
+	'use strict';
 
-define("frontend-js-metal-web@1.0.0/metal/src/array/array", ['exports', 'metal/src/core'], function (exports, _core) {
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
@@ -19,7 +19,7 @@ define("frontend-js-metal-web@1.0.0/metal/src/array/array", ['exports', 'metal/s
 		}
 	}
 
-	var array = (function () {
+	var array = function () {
 		function array() {
 			_classCallCheck(this, array);
 		}
@@ -30,7 +30,6 @@ define("frontend-js-metal-web@1.0.0/metal/src/array/array", ['exports', 'metal/s
 					return false;
 				}
 			}
-
 			return arr1.length === arr2.length;
 		};
 
@@ -44,7 +43,6 @@ define("frontend-js-metal-web@1.0.0/metal/src/array/array", ['exports', 'metal/s
 
 		array.flatten = function flatten(arr, opt_output) {
 			var output = opt_output || [];
-
 			for (var i = 0; i < arr.length; i++) {
 				if (Array.isArray(arr[i])) {
 					array.flatten(arr[i], output);
@@ -52,18 +50,15 @@ define("frontend-js-metal-web@1.0.0/metal/src/array/array", ['exports', 'metal/s
 					output.push(arr[i]);
 				}
 			}
-
 			return output;
 		};
 
 		array.remove = function remove(arr, obj) {
 			var i = arr.indexOf(obj);
 			var rv;
-
 			if (rv = i >= 0) {
 				array.removeAt(arr, i);
 			}
-
 			return rv;
 		};
 
@@ -74,16 +69,14 @@ define("frontend-js-metal-web@1.0.0/metal/src/array/array", ['exports', 'metal/s
 		array.slice = function slice(arr, start, opt_end) {
 			var sliced = [];
 			var end = _core2.default.isDef(opt_end) ? opt_end : arr.length;
-
 			for (var i = start; i < end; i++) {
 				sliced.push(arr[i]);
 			}
-
 			return sliced;
 		};
 
 		return array;
-	})();
+	}();
 
 	exports.default = array;
 });

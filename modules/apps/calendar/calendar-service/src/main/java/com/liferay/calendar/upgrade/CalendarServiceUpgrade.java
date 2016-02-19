@@ -16,13 +16,14 @@ package com.liferay.calendar.upgrade;
 
 import com.liferay.calendar.upgrade.v1_0_1.UpgradeCalendar;
 import com.liferay.calendar.upgrade.v1_0_3.UpgradeCalendarResource;
+import com.liferay.calendar.upgrade.v1_0_3.UpgradeClassNames;
 import com.liferay.calendar.upgrade.v1_0_3.UpgradeCompanyId;
 import com.liferay.calendar.upgrade.v1_0_3.UpgradeLastPublishDate;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
+import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.upgrade.DummyUpgradeStep;
-import com.liferay.portal.service.ClassNameLocalService;
-import com.liferay.portal.service.CompanyLocalService;
-import com.liferay.portal.service.UserLocalService;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 
 import org.osgi.service.component.annotations.Component;
@@ -52,6 +53,7 @@ public class CalendarServiceUpgrade implements UpgradeStepRegistrator {
 
 		registry.register(
 			"com.liferay.calendar.service", "1.0.2", "1.0.3",
+			new UpgradeClassNames(),
 			new UpgradeCalendarResource(
 				_classNameLocalService, _companyLocalService,
 				_userLocalService),

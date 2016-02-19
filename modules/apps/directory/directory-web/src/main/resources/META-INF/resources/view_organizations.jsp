@@ -78,13 +78,13 @@ if (parentOrganizationId > 0) {
 	%>
 
 	<liferay-ui:organization-search-container-results
+		forceDatabase="<%= !portletName.equals(PortletKeys.DIRECTORY) %>"
 		organizationParams="<%= organizationParams %>"
 		parentOrganizationId="<%= parentOrganizationId %>"
-		useIndexer="<%= portletName.equals(PortletKeys.DIRECTORY) %>"
 	/>
 
 	<liferay-ui:search-container-row
-		className="com.liferay.portal.model.Organization"
+		className="com.liferay.portal.kernel.model.Organization"
 		escapedModel="<%= true %>"
 		keyProperty="organizationId"
 		modelVar="organization"

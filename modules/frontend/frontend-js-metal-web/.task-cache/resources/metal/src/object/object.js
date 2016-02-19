@@ -1,6 +1,6 @@
-'use strict';
+define("frontend-js-metal-web@1.0.0/metal/src/object/object", ['exports', '../core'], function (exports, _core) {
+	'use strict';
 
-define("frontend-js-metal-web@1.0.0/metal/src/object/object", ['exports', 'metal/src/core'], function (exports, _core) {
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
@@ -19,22 +19,19 @@ define("frontend-js-metal-web@1.0.0/metal/src/object/object", ['exports', 'metal
 		}
 	}
 
-	var object = (function () {
+	var object = function () {
 		function object() {
 			_classCallCheck(this, object);
 		}
 
 		object.mixin = function mixin(target) {
 			var key, source;
-
 			for (var i = 1; i < arguments.length; i++) {
 				source = arguments[i];
-
 				for (key in source) {
 					target[key] = source[key];
 				}
 			}
-
 			return target;
 		};
 
@@ -42,7 +39,6 @@ define("frontend-js-metal-web@1.0.0/metal/src/object/object", ['exports', 'metal
 			var parts = name.split('.');
 			var cur = opt_obj || window;
 			var part;
-
 			while (part = parts.shift()) {
 				if (_core2.default.isDefAndNotNull(cur[part])) {
 					cur = cur[part];
@@ -50,23 +46,20 @@ define("frontend-js-metal-web@1.0.0/metal/src/object/object", ['exports', 'metal
 					return null;
 				}
 			}
-
 			return cur;
 		};
 
 		object.map = function map(obj, fn) {
 			var mappedObj = {};
 			var keys = Object.keys(obj);
-
 			for (var i = 0; i < keys.length; i++) {
 				mappedObj[keys[i]] = fn(keys[i], obj[keys[i]]);
 			}
-
 			return mappedObj;
 		};
 
 		return object;
-	})();
+	}();
 
 	exports.default = object;
 });

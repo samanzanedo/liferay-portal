@@ -1,18 +1,20 @@
-'use strict'
-
-/**
- * A collection of core utility functions.
- * @const
- */
-;
 define("frontend-js-metal-web@1.0.0/metal/src/core", ['exports'], function (exports) {
+	'use strict';
+
+	/**
+  * A collection of core utility functions.
+  * @const
+  */
+
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
 
-	function _typeof(obj) {
-		return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
-	}
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+		return typeof obj;
+	} : function (obj) {
+		return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+	};
 
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
@@ -20,7 +22,7 @@ define("frontend-js-metal-web@1.0.0/metal/src/core", ['exports'], function (expo
 		}
 	}
 
-	var core = (function () {
+	var core = function () {
 		function core() {
 			_classCallCheck(this, core);
 		}
@@ -31,12 +33,10 @@ define("frontend-js-metal-web@1.0.0/metal/src/core", ['exports'], function (expo
 
 		core.collectSuperClassesProperty = function collectSuperClassesProperty(constructor, propertyName) {
 			var propertyValues = [constructor[propertyName]];
-
 			while (constructor.__proto__ && !constructor.__proto__.isPrototypeOf(Function)) {
 				constructor = constructor.__proto__;
 				propertyValues.push(constructor[propertyName]);
 			}
-
 			return propertyValues;
 		};
 
@@ -45,7 +45,6 @@ define("frontend-js-metal-web@1.0.0/metal/src/core", ['exports'], function (expo
 				var str = fn.toString();
 				fn.name = str.substring(9, str.indexOf('('));
 			}
-
 			return fn.name;
 		};
 
@@ -53,7 +52,6 @@ define("frontend-js-metal-web@1.0.0/metal/src/core", ['exports'], function (expo
 			if (opt_object) {
 				return opt_object[core.UID_PROPERTY] || (opt_object[core.UID_PROPERTY] = core.uniqueIdCounter_++);
 			}
-
 			return core.uniqueIdCounter_++;
 		};
 
@@ -102,23 +100,24 @@ define("frontend-js-metal-web@1.0.0/metal/src/core", ['exports'], function (expo
 			return type === 'object' && val !== null || type === 'function';
 		};
 
+		core.isPromise = function isPromise(val) {
+			return val && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object' && typeof val.then === 'function';
+		};
+
 		core.isString = function isString(val) {
 			return typeof val === 'string';
 		};
 
 		core.mergeSuperClassesProperty = function mergeSuperClassesProperty(constructor, propertyName, opt_mergeFn) {
 			var mergedName = propertyName + '_MERGED';
-
 			if (constructor.hasOwnProperty(mergedName)) {
 				return false;
 			}
 
 			var merged = core.collectSuperClassesProperty(constructor, propertyName);
-
 			if (opt_mergeFn) {
 				merged = opt_mergeFn(merged);
 			}
-
 			constructor[mergedName] = merged;
 			return true;
 		};
@@ -126,10 +125,22 @@ define("frontend-js-metal-web@1.0.0/metal/src/core", ['exports'], function (expo
 		core.nullFunction = function nullFunction() {};
 
 		return core;
-	})();
+	}();
 
-	core.UID_PROPERTY = 'core_' + Date.now() % 1e9 + '' + (Math.random() * 1e9 >>> 0);
+	/**
+  * Unique id property prefix.
+  * @type {String}
+  * @protected
+  */
+	core.UID_PROPERTY = 'core_' + (Math.random() * 1e9 >>> 0);
+
+	/**
+  * Counter for unique id.
+  * @type {Number}
+  * @private
+  */
 	core.uniqueIdCounter_ = 1;
+
 	exports.default = core;
 });
 //# sourceMappingURL=core.js.map
