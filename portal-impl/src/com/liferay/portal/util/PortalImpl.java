@@ -5427,7 +5427,8 @@ public class PortalImpl implements Portal {
 
 			String currentRequestClassName = currentRequestClass.getName();
 
-			if (!currentRequestClassName.startsWith("com.liferay.")) {
+			if (!currentRequestClassName.startsWith("com.liferay.") &&
+					!currentRequestClassName.startsWith("com.ibm.ws.cache.servlet.")) {
 				break;
 			}
 
