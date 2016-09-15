@@ -129,6 +129,41 @@ version 1.0.125.
 - [LPS-66853]: Update the [Liferay Source Formatter] dependency to version
 1.0.275.
 
+## 2.0.29 - 2016-09-08
+
+### Changed
+- [LPS-66853]: Update the [Liferay Source Formatter] dependency to version
+1.0.276.
+
+## 2.0.30 - 2016-09-09
+
+### Added
+- [LPS-61099]: Allow the `liferay.appServerParentDir` property's default value
+to be overridden by setting the project property `app.server.parent.dir`.
+
+## 2.0.31 - 2016-09-12
+
+### Added
+- [LPS-67766]: Automatically apply the `com.liferay.soy.translation` plugin in
+order to use the Liferay localization mechanism in the generated `.soy.js`
+files.
+
+## 2.0.32 - 2016-09-13
+
+### Changed
+- [LPS-67352]: Update the [Liferay Source Formatter] dependency to version
+1.0.277.
+
+## 2.0.33 - 2016-09-13
+
+### Changed
+- [LPS-67986]: Update the [Liferay CSS Builder] dependency to version 1.0.20.
+
+## 2.0.34 - 2016-09-14
+
+- [LPS-68131]: Update the [Liferay Source Formatter] dependency to version
+1.0.278.
+
 [Gradle Bundle Plugin]: https://github.com/TomDmitriev/gradle-bundle-plugin
 [Liferay Ant BND]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/ant-bnd
 [Liferay CSS Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/util/css-builder
@@ -137,12 +172,15 @@ version 1.0.125.
 [Liferay Gradle Plugins JS Transpiler]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-js-transpiler
 [Liferay Portal Tools Service Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/util/portal-tools-service-builder
 [Liferay Source Formatter]: https://github.com/liferay/liferay-portal/tree/master/modules/util/source-formatter
+[LPS-61099]: https://issues.liferay.com/browse/LPS-61099
 [LPS-66853]: https://issues.liferay.com/browse/LPS-66853
 [LPS-67023]: https://issues.liferay.com/browse/LPS-67023
 [LPS-67352]: https://issues.liferay.com/browse/LPS-67352
 [LPS-67658]: https://issues.liferay.com/browse/LPS-67658
+[LPS-67766]: https://issues.liferay.com/browse/LPS-67766
 [LPS-67804]: https://issues.liferay.com/browse/LPS-67804
 [LPS-67986]: https://issues.liferay.com/browse/LPS-67986
 [LPS-67996]: https://issues.liferay.com/browse/LPS-67996
 [LPS-68014]: https://issues.liferay.com/browse/LPS-68014
 [LPS-68035]: https://issues.liferay.com/browse/LPS-68035
+[LPS-68131]: https://issues.liferay.com/browse/LPS-68131

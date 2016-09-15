@@ -863,6 +863,7 @@ public class PortalImpl implements Portal {
 
 		while (enu.hasMoreElements()) {
 			String param = enu.nextElement();
+
 			String[] values = actionRequest.getParameterValues(param);
 
 			if (renderParameters.get(actionResponse.getNamespace() + param) ==
@@ -1031,15 +1032,8 @@ public class PortalImpl implements Portal {
 			}
 		}
 		else {
-			LayoutQueryStringComposite layoutQueryStringComposite =
-				getPortletFriendlyURLMapperLayoutQueryStringComposite(
-					groupId, privateLayout, friendlyURL, params,
-					requestContext);
-
-			layout = layoutQueryStringComposite.getLayout();
-			layoutQueryStringCompositeFriendlyURL =
-				layoutQueryStringComposite.getFriendlyURL();
-			queryString = layoutQueryStringComposite.getQueryString();
+			return getPortletFriendlyURLMapperLayoutQueryStringComposite(
+				groupId, privateLayout, friendlyURL, params, requestContext);
 		}
 
 		return new LayoutQueryStringComposite(
@@ -5427,7 +5421,9 @@ public class PortalImpl implements Portal {
 
 			String currentRequestClassName = currentRequestClass.getName();
 
-			if (!currentRequestClassName.startsWith("com.liferay.")) {
+			boolean unWrap = false;
+
+			if (!_needToUnWrapRequest(currentRequestClassName)) {
 				break;
 			}
 
@@ -8164,6 +8160,18 @@ public class PortalImpl implements Portal {
 		themeDisplay.setI18nLanguageId(i18nLanguageId);
 		themeDisplay.setI18nPath(i18nPath);
 		themeDisplay.setLocale(locale);
+	}
+
+	private boolean _needToUnWrapRequest(String currentRequestClassName) {
+		for (String requestUnwrapPackage :
+				PropsValues.REQUEST_UNWRAP_PACKAGES) {
+
+			if (currentRequestClassName.startsWith(requestUnwrapPackage)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static final Log _logWebServerServlet = LogFactoryUtil.getLog(
