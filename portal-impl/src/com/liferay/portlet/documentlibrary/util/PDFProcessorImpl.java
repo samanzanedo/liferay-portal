@@ -72,6 +72,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 
 /**
  * @author Alexander Chow
@@ -642,16 +643,24 @@ public class PDFProcessorImpl
 	private void _generateImagesPB(FileVersion fileVersion, File file)
 		throws Exception {
 
+		int previewFilesCount = 0;
+
+		try (PDDocument pdDocument = PDDocument.load(file)) {
+			if (!_isDocumentDecrypted(pdDocument, file)) {
+				_log.error(
+					"Unable to decrypt PDF document with {fileEntryId=" +
+						fileVersion.getFileEntryId() + "}");
+
+				return;
+			}
+
+			previewFilesCount = pdDocument.getNumberOfPages();
+		}
+
 		String tempFileId = DLUtil.getTempFileId(
 			fileVersion.getFileEntryId(), fileVersion.getVersion());
 
 		File thumbnailFile = getThumbnailTempFile(tempFileId);
-
-		int previewFilesCount = 0;
-
-		try (PDDocument pdDocument = PDDocument.load(file)) {
-			previewFilesCount = pdDocument.getNumberOfPages();
-		}
 
 		File[] previewFiles = new File[previewFilesCount];
 
@@ -896,6 +905,32 @@ public class PDFProcessorImpl
 		}
 
 		return hasThumbnails(fileVersion);
+	}
+
+	private boolean _isDocumentDecrypted(PDDocument pdDocument, File file) {
+		if (!pdDocument.isEncrypted()) {
+			return true;
+		}
+
+		try {
+			StandardDecryptionMaterial standardDecryptionMaterial =
+				new StandardDecryptionMaterial("");
+
+			pdDocument.openProtection(standardDecryptionMaterial);
+
+			pdDocument.setAllSecurityToBeRemoved(true);
+
+			pdDocument.save(file);
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(e.getMessage());
+			}
+
+			return false;
+		}
+
+		return true;
 	}
 
 	private boolean _isGeneratePreview(FileVersion fileVersion)
