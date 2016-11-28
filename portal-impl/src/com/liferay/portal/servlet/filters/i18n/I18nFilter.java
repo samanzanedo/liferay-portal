@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -224,6 +225,31 @@ public class I18nFilter extends BasePortalFilter {
 		return requestedLanguageId;
 	}
 
+	protected Set<Locale> getSiteAvailableLanguages(
+		HttpServletRequest request) {
+
+		String friendlyURL = getFriendlyURL(request);
+
+		long companyId = PortalUtil.getCompanyId(request);
+
+		try {
+			Group group = GroupLocalServiceUtil.getFriendlyURLGroup(
+				companyId, friendlyURL);
+
+			Set<Locale> availableLocales = LanguageUtil.getAvailableLocales(
+				group.getGroupId());
+
+			return availableLocales;
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(pe);
+			}
+		}
+
+		return null;
+	}
+
 	protected String getSiteDefaultLanguageId(HttpServletRequest request) {
 		String friendlyURL = getFriendlyURL(request);
 
@@ -294,6 +320,31 @@ public class I18nFilter extends BasePortalFilter {
 
 		if (Validator.isNull(requestedLanguageId)) {
 			requestedLanguageId = defaultLanguageId;
+		}
+
+		boolean requestedLanguageIsAvailable = false;
+
+		Set<Locale> locales = getSiteAvailableLanguages(request);
+
+		if (SetUtil.isNotEmpty(locales)) {
+			for (Locale locale : locales) {
+				if (locale.toString().equals(requestedLanguageId)) {
+					requestedLanguageIsAvailable = true;
+
+					break;
+				}
+			}
+		}
+
+		if (!requestedLanguageIsAvailable) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"No prepend I18n language ID because requested " +
+						"language ID " + requestedLanguageId +
+							" is not available on site.");
+			}
+
+			return null;
 		}
 
 		if (prependFriendlyUrlStyle == 1) {
