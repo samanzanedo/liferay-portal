@@ -3,7 +3,7 @@
 ;
 [subrepo]
 	cmdver = liferay
-	commit = 57483d3e9f0325b4b41be25d224d9f2323164a39
+	commit = 6836fb768c449b3111155dd2c8e639d05c23bc1c
 	mode = push
-	parent = 7dac4c20f893e060d42a3b076de33614554cf8ba
+	parent = 6fbcf821374b2e0fd0f1ef0ac75fe17b43ba6298
 	remote = git@github.com:liferay/com-liferay-marketplace.git

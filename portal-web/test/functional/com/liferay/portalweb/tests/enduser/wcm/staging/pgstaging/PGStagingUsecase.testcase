@@ -1,5 +1,6 @@
 <definition component-name="portal-staging">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Staging" />
 
 	<set-up>
@@ -116,6 +117,7 @@
 			<var name="orgName" value="Organization Name" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
+			<var name="userName" value="userfn userln" />
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
@@ -127,6 +129,7 @@
 			<var name="userEmailAddress" value="usereacr@liferay.com" />
 			<var name="userFirstName" value="userfncr" />
 			<var name="userLastName" value="userlncr" />
+			<var name="userName" value="userfncr userlncr" />
 			<var name="userScreenName" value="usersncr" />
 		</execute>
 
@@ -150,6 +153,7 @@
 			<var name="orgName" value="Organization Name" />
 			<var name="userFirstName" value="userfncr" />
 			<var name="userLastName" value="userlncr" />
+			<var name="userName" value="userfncr userlncr" />
 			<var name="userScreenName" value="usersncr" />
 		</execute>
 

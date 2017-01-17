@@ -99,6 +99,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
@@ -897,6 +898,25 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		queryConfig.setSelectedFieldNames(selectedFieldNames);
 	}
 
+	protected void addLocalizedField(
+		Document document, String field, Locale siteDefaultLocale,
+		Map<Locale, String> map) {
+
+		for (Entry<Locale, String> entry : map.entrySet()) {
+			Locale locale = entry.getKey();
+
+			if (locale.equals(siteDefaultLocale)) {
+				document.addText(field, entry.getValue());
+			}
+
+			String languageId = LocaleUtil.toLanguageId(locale);
+
+			document.addText(
+				LocalizationUtil.getLocalizedName(field, languageId),
+				entry.getValue());
+		}
+	}
+
 	protected void addSearchAssetCategoryIds(
 			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception {
@@ -1669,8 +1689,14 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 				expandoBridge.getCompanyId(), expandoBridge.getClassName(),
 				attributeName);
 
+		UnicodeProperties unicodeProperties =
+			expandoColumn.getTypeSettingsProperties();
+
+		int indexType = GetterUtil.getInteger(
+			unicodeProperties.getProperty(ExpandoColumnConstants.INDEX_TYPE));
+
 		String fieldName = ExpandoBridgeIndexerUtil.encodeFieldName(
-			attributeName);
+			attributeName, indexType);
 
 		if (expandoColumn.getType() ==
 				ExpandoColumnConstants.STRING_LOCALIZED) {
