@@ -14,7 +14,8 @@
 
 package com.liferay.dynamic.data.lists.form.web.internal.portlet.action;
 
-import com.liferay.dynamic.data.lists.form.web.internal.converter.DDLFormRulesToDDMFormRulesConverter;
+import com.liferay.dynamic.data.lists.form.web.internal.converter.DDLFormRuleDeserializer;
+import com.liferay.dynamic.data.lists.form.web.internal.converter.DDLFormRuleToDDMFormRuleConverter;
 import com.liferay.dynamic.data.lists.form.web.internal.converter.model.DDLFormRule;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
 import com.liferay.dynamic.data.lists.model.DDLRecordSetConstants;
@@ -39,15 +40,12 @@ import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.storage.StorageType;
 import com.liferay.dynamic.data.mapping.util.DDMFormFactory;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONDeserializer;
-import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -105,7 +103,7 @@ public class SaveRecordSetMVCCommandHelper {
 
 		return ddmStructureService.addStructure(
 			groupId, DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID,
-			PortalUtil.getClassNameId(DDLRecordSet.class), structureKey,
+			_portal.getClassNameId(DDLRecordSet.class), structureKey,
 			getLocalizedMap(themeDisplay.getSiteDefaultLocale(), name),
 			getLocalizedMap(themeDisplay.getSiteDefaultLocale(), description),
 			ddmForm, ddmFormLayout, storageType,
@@ -119,19 +117,29 @@ public class SaveRecordSetMVCCommandHelper {
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		String name = ParamUtil.getString(portletRequest, "name");
+		String description = ParamUtil.getString(portletRequest, "description");
+
+		return addRecordSet(
+			portletRequest, ddmStructureId,
+			getLocalizedMap(themeDisplay.getSiteDefaultLocale(), name),
+			getLocalizedMap(themeDisplay.getSiteDefaultLocale(), description));
+	}
+
+	protected DDLRecordSet addRecordSet(
+			PortletRequest portletRequest, long ddmStructureId,
+			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap)
+		throws Exception {
+
 		long groupId = ParamUtil.getLong(portletRequest, "groupId");
 		String recordSetKey = ParamUtil.getString(
 			portletRequest, "recordSetKey");
-		String name = ParamUtil.getString(portletRequest, "name");
-		String description = ParamUtil.getString(portletRequest, "description");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			DDLRecordSet.class.getName(), portletRequest);
 
 		return ddlRecordSetService.addRecordSet(
-			groupId, ddmStructureId, recordSetKey,
-			getLocalizedMap(themeDisplay.getSiteDefaultLocale(), name),
-			getLocalizedMap(themeDisplay.getSiteDefaultLocale(), description),
+			groupId, ddmStructureId, recordSetKey, nameMap, descriptionMap,
 			DDLRecordSetConstants.MIN_DISPLAY_ROWS_DEFAULT,
 			DDLRecordSetConstants.SCOPE_FORMS, serviceContext);
 	}
@@ -197,14 +205,10 @@ public class SaveRecordSetMVCCommandHelper {
 			return Collections.emptyList();
 		}
 
-		JSONDeserializer<DDLFormRule[]> jsonDeserializer =
-			jsonFactory.createJSONDeserializer();
+		List<DDLFormRule> ddlFormRules = ddlFormRuleDeserializer.deserialize(
+			rules);
 
-		DDLFormRule[] ddlFormRules = jsonDeserializer.deserialize(
-			rules, DDLFormRule[].class);
-
-		return ddlFormRulesToDDMFormRulesConverter.convert(
-			ListUtil.toList(ddlFormRules));
+		return ddlFormRulesToDDMFormRulesConverter.convert(ddlFormRules);
 	}
 
 	protected Map<Locale, String> getLocalizedMap(Locale locale, String value) {
@@ -269,9 +273,6 @@ public class SaveRecordSetMVCCommandHelper {
 	protected DDMStructure updateDDMStructure(PortletRequest portletRequest)
 		throws Exception {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		long ddmStructureId = ParamUtil.getLong(
 			portletRequest, "ddmStructureId");
 		String name = ParamUtil.getString(portletRequest, "name");
@@ -284,9 +285,9 @@ public class SaveRecordSetMVCCommandHelper {
 
 		return ddmStructureService.updateStructure(
 			ddmStructureId, DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID,
-			getLocalizedMap(themeDisplay.getSiteDefaultLocale(), name),
-			getLocalizedMap(themeDisplay.getSiteDefaultLocale(), description),
-			ddmForm, ddmFormLayout, serviceContext);
+			getLocalizedMap(ddmForm.getDefaultLocale(), name),
+			getLocalizedMap(ddmForm.getDefaultLocale(), description), ddmForm,
+			ddmFormLayout, serviceContext);
 	}
 
 	protected DDLRecordSet updateRecordSet(
@@ -353,6 +354,10 @@ public class SaveRecordSetMVCCommandHelper {
 
 		String workflowDefinition = getWorkflowDefinition(ddmFormValues);
 
+		if (workflowDefinition.equals("no-workflow")) {
+			workflowDefinition = "";
+		}
+
 		workflowDefinitionLinkLocalService.updateWorkflowDefinitionLink(
 			themeDisplay.getUserId(), themeDisplay.getCompanyId(), groupId,
 			DDLRecordSet.class.getName(), recordSet.getRecordSetId(), 0,
@@ -360,7 +365,10 @@ public class SaveRecordSetMVCCommandHelper {
 	}
 
 	@Reference
-	protected DDLFormRulesToDDMFormRulesConverter
+	protected DDLFormRuleDeserializer ddlFormRuleDeserializer;
+
+	@Reference
+	protected DDLFormRuleToDDMFormRuleConverter
 		ddlFormRulesToDDMFormRulesConverter;
 
 	@Reference
@@ -382,10 +390,10 @@ public class SaveRecordSetMVCCommandHelper {
 	protected DDMStructureService ddmStructureService;
 
 	@Reference
-	protected JSONFactory jsonFactory;
-
-	@Reference
 	protected volatile WorkflowDefinitionLinkLocalService
 		workflowDefinitionLinkLocalService;
+
+	@Reference
+	private Portal _portal;
 
 }

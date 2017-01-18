@@ -1,5 +1,6 @@
 <definition component-name="portal-user-management-and-portal-configuration">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Users and Organizations" />
 
 	<set-up>
@@ -50,6 +51,7 @@
 			<var name="orgName" value="Organization Name" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
+			<var name="userName" value="userfn userln" />
 			<var name="userScreenName" value="usersn" />
 		</execute>
 

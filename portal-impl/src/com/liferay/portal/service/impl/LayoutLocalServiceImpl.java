@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.systemevent.SystemEventHierarchyEntry;
 import com.liferay.portal.kernel.systemevent.SystemEventHierarchyEntryThreadLocal;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.AutoResetThreadLocal;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -333,10 +334,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		layoutSetLocalService.updatePageCount(groupId, privateLayout);
 
-		LayoutSet layoutSet = layoutSetPersistence.findByG_P(
-			groupId, privateLayout);
-
-		layout.setLayoutSet(layoutSet);
+		layout.setLayoutSet(null);
 
 		// Asset
 
@@ -344,7 +342,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			userId, layout, serviceContext.getAssetCategoryIds(),
 			serviceContext.getAssetTagNames());
 
-		return layout;
+		return layoutLocalService.getLayout(layout.getPlid());
 	}
 
 	/**
@@ -484,11 +482,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		portletPreferencesLocalService.deletePortletPreferencesByPlid(
 			layout.getPlid());
-
-		// Subscriptions
-
-		subscriptionLocalService.deleteSubscriptions(
-			layout.getCompanyId(), Layout.class.getName(), layout.getPlid());
 
 		// Asset
 
@@ -957,6 +950,20 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	}
 
 	@Override
+	public Layout fetchDefaultLayout(long groupId, boolean privateLayout) {
+		if (groupId > 0) {
+			List<Layout> layouts = layoutPersistence.findByG_P(
+				groupId, privateLayout, 0, 1);
+
+			if (!layouts.isEmpty()) {
+				return layouts.get(0);
+			}
+		}
+
+		return null;
+	}
+
+	@Override
 	public Layout fetchFirstLayout(
 		long groupId, boolean privateLayout, long parentLayoutId) {
 
@@ -973,11 +980,26 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	}
 
 	@Override
+	public Layout fetchLayout(
+		String uuid, long groupId, boolean privateLayout) {
+
+		return layoutPersistence.fetchByUUID_G_P(uuid, groupId, privateLayout);
+	}
+
+	@Override
 	public Layout fetchLayoutByFriendlyURL(
 		long groupId, boolean privateLayout, String friendlyURL) {
 
 		return layoutPersistence.fetchByG_P_F(
 			groupId, privateLayout, friendlyURL);
+	}
+
+	@Override
+	public Layout fetchLayoutByIconImageId(
+			boolean privateLayout, long iconImageId)
+		throws PortalException {
+
+		return layoutPersistence.fetchByP_I(privateLayout, iconImageId);
 	}
 
 	/**
@@ -1013,15 +1035,10 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	 */
 	@Override
 	public long getDefaultPlid(long groupId, boolean privateLayout) {
-		if (groupId > 0) {
-			List<Layout> layouts = layoutPersistence.findByG_P(
-				groupId, privateLayout, 0, 1);
+		Layout layout = fetchDefaultLayout(groupId, privateLayout);
 
-			if (!layouts.isEmpty()) {
-				Layout layout = layouts.get(0);
-
-				return layout.getPlid();
-			}
+		if (layout != null) {
+			return layout.getPlid();
 		}
 
 		return LayoutConstants.DEFAULT_PLID;
@@ -1176,6 +1193,11 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		throws PortalException {
 
 		return layoutPersistence.findByIconImageId(iconImageId);
+	}
+
+	@Override
+	public List<Layout> getLayouts(long companyId) {
+		return layoutPersistence.findByCompanyId(companyId);
 	}
 
 	/**
@@ -1423,6 +1445,10 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	@Override
 	public int getLayoutsCount(
 		Group group, boolean privateLayout, long[] layoutIds) {
+
+		if (ArrayUtil.isEmpty(layoutIds)) {
+			return 0;
+		}
 
 		DynamicQuery dynamicQuery = dynamicQuery();
 

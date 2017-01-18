@@ -1,5 +1,6 @@
 <definition component-name="portal-user-management-and-portal-configuration">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Roles" />
 
 	<set-up>
@@ -1423,6 +1424,7 @@
 			<var name="orgName" value="Organization Name 1" />
 			<var name="userFirstName" value="userfn1" />
 			<var name="userLastName" value="userln1" />
+			<var name="userName" value="userfn1 userln1" />
 			<var name="userScreenName" value="usersn1" />
 		</execute>
 
@@ -1436,6 +1438,7 @@
 			<var name="orgName" value="Organization Name 2" />
 			<var name="userFirstName" value="userfn2" />
 			<var name="userLastName" value="userln2" />
+			<var name="userName" value="userfn2 userln2" />
 			<var name="userScreenName" value="usersn2" />
 		</execute>
 
@@ -1463,6 +1466,7 @@
 			<var name="orgName" value="Organization Name 3" />
 			<var name="userFirstName" value="userfn3" />
 			<var name="userLastName" value="userln3" />
+			<var name="userName" value="userfn3 userln3" />
 			<var name="userScreenName" value="usersn3" />
 		</execute>
 
@@ -1926,83 +1930,6 @@
 		</execute>
 	</command>
 
-	<command name="RolesXSS" priority="4">
-		<execute macro="ProductMenu#gotoControlPanelUsers">
-			<var name="portlet" value="Roles" />
-		</execute>
-
-		<execute macro="Role#addCP">
-			<var name="roleDescription" value="This is the role description field" />
-			<var name="roleTitle"><![CDATA[<script>alert("xss")</script>]]></var>
-			<var name="roleKey" value="Role 1" />
-		</execute>
-
-		<execute macro="Role#viewNoXSSCP">
-			<var name="roleDescription" value="This is the role description field" />
-			<var name="roleTitle" value="Role 1" />
-		</execute>
-
-		<execute macro="Role#addCP">
-			<var name="roleDescription" value="This is the role description field" />
-			<var name="roleTitle" value="Role 2" />
-			<var name="roleKey"><![CDATA[<script>alert("xss")</script>]]></var>
-		</execute>
-
-		<execute macro="Role#viewNoXSSCP">
-			<var name="roleDescription" value="This is the role description field" />
-			<var name="roleTitle"><![CDATA[<script>alert("xss")</script>]]></var>
-		</execute>
-
-		<execute macro="Role#addCP">
-			<var name="roleDescription"><![CDATA[<script>alert("xss")</script>]]></var>
-			<var name="roleKey" value="Role 3" />
-			<var name="roleTitle" value="Test Role" />
-		</execute>
-
-		<execute macro="Role#viewNoXSSCP">
-			<var name="roleDescription"><![CDATA[<script>alert("xss")</script>]]></var>
-			<var name="roleTitle" value="Role 3" />
-		</execute>
-
-		<execute macro="Role#addCP">
-			<var name="roleDescription"><![CDATA[<script>alert("xss")</script>]]></var>
-			<var name="roleKey" value="Role 4" />
-			<var name="roleTitle" value="Site Role" />
-			<var name="roleType" value="Site" />
-		</execute>
-
-		<execute macro="Role#viewNoXSSCP">
-			<var name="roleDescription"><![CDATA[<script>alert("xss")</script>]]></var>
-			<var name="roleTitle" value="Role 4" />
-			<var name="roleType" value="Site" />
-		</execute>
-
-		<execute macro="Role#addCP">
-			<var name="roleDescription"><![CDATA[<script>alert("xss")</script>]]></var>
-			<var name="roleKey" value="Role 5" />
-			<var name="roleTitle" value="Organization Role" />
-			<var name="roleType" value="Organization" />
-		</execute>
-
-		<execute macro="Role#viewNoXSSCP">
-			<var name="roleDescription"><![CDATA[<script>alert("xss")</script>]]></var>
-			<var name="roleTitle" value="Role 5" />
-			<var name="roleType" value="Organization" />
-		</execute>
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="Portlet#addPG">
-			<var name="portletName" value="Sign In" />
-		</execute>
-
-		<execute macro="PermissionsInline#gotoConfigurationPG">
-			<var name="portletName" value="Sign In" />
-		</execute>
-
-		<execute function="AssertAlertNotPresent" />
-	</command>
-
 	<command name="SiteRoleBookmarksInlinePermissions" priority="4">
 		<execute macro="TestCase#getSiteName">
 			<return from="siteName" name="siteName" />
@@ -2350,7 +2277,7 @@
 	</command>
 
 	<command name="ViewPreferencesPanelPermissionSiteMemberRole" priority="4">
-		<property name="osgi.modules.includes" value="currency-converter-web" />
+		<property name="osgi.app.includes" value="currency-converter" />
 
 		<execute macro="TestCase#getSiteName">
 			<return from="siteName" name="siteName" />
@@ -2429,6 +2356,73 @@
 		<execute macro="User#loginUserPG">
 			<var name="password" value="test" />
 			<var name="userEmailAddress" value="test@liferay.com" />
+		</execute>
+	</command>
+
+	<command name="ViewPrivatePageSiteMemberRole" priority="4">
+		<execute macro="ProductMenu#gotoControlPanelUsers">
+			<var name="portlet" value="Users and Organizations" />
+		</execute>
+
+		<execute macro="User#addCP">
+			<var name="userEmailAddress" value="userea@liferay.com" />
+			<var name="userFirstName" value="userfn" />
+			<var name="userLastName" value="userln" />
+			<var name="userScreenName" value="usersn" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelUsers">
+			<var name="portlet" value="Users and Organizations" />
+		</execute>
+
+		<execute macro="User#editPasswordCP">
+			<var name="userEmailAddress" value="userea@liferay.com" />
+			<var name="userScreenName" value="usersn" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelUsers">
+			<var name="portlet" value="User Groups" />
+		</execute>
+
+		<execute macro="UserGroup#addCP">
+			<var name="userGroupName" value="UG UserGroup Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelUsers">
+			<var name="portlet" value="User Groups" />
+		</execute>
+
+		<execute macro="UserGroup#assignMemberCP">
+			<var name="userGroupName" value="UG UserGroup Name" />
+			<var name="userScreenName" value="usersn" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesMembers">
+			<var name="portlet" value="Site Memberships" />
+		</execute>
+
+		<execute macro="Site#assignUserGroupAsMemberCP">
+			<var name="userGroupName" value="UG UserGroup Name" />
+		</execute>
+
+		<execute macro="Page#add">
+			<var name="pageName" value="Private Page" />
+			<var name="sitePagePrivacy" value="Private" />
+		</execute>
+
+		<execute macro="User#logoutPG" />
+
+		<execute macro="User#loginUserPG">
+			<var name="password" value="test" />
+			<var name="userEmailAddress" value="userea@liferay.com" />
+		</execute>
+
+		<execute macro="Navigator#openPrivateURL">
+			<var name="pageName" value="Private Page" />
+		</execute>
+
+		<execute macro="Page#viewSpecificPG">
+			<var name="pageNameList" value="Private Page" />
 		</execute>
 	</command>
 
