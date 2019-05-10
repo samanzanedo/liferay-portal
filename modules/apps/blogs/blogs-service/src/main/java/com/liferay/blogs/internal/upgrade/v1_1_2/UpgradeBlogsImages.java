@@ -15,8 +15,8 @@
 package com.liferay.blogs.internal.upgrade.v1_1_2;
 
 import com.liferay.blogs.constants.BlogsConstants;
-import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.internal.upgrade.v1_1_1.util.BlogsEntryTable;
+import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ImageLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
-import com.liferay.portal.kernel.upgrade.UpgradeProcess.AlterColumnType;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -57,10 +56,15 @@ public class UpgradeBlogsImages extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-		if (hasColumnType(BlogsEntryTable.class, "smallImageId", "VARCHAR(75) null")) {
-			alter(BlogsEntryTable.class, new AlterColumnType("smallImageId", "BIGINT null"));
+		if (hasColumnType(
+				BlogsEntryTable.class, "smallImageId", "VARCHAR(75) null")) {
+
+			alter(
+				BlogsEntryTable.class,
+				new UpgradeProcess.AlterColumnType(
+					"smallImageId", "BIGINT null"));
 		}
-		
+
 		try (PreparedStatement ps1 = connection.prepareStatement(
 				SQLTransformer.transform(
 					"select entryId, groupId, companyId, userId, " +
