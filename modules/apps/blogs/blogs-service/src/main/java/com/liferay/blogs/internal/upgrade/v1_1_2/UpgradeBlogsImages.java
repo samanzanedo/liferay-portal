@@ -56,8 +56,8 @@ public class UpgradeBlogsImages extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-		if (hasColumnType(
-				BlogsEntryTable.class, "smallImageId", "VARCHAR(75) null")) {
+		if (!hasColumnType(
+				BlogsEntryTable.class, "smallImageId", "BIGINT null")) {
 
 			alter(
 				BlogsEntryTable.class,
