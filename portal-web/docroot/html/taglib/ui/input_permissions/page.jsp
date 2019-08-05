@@ -103,9 +103,11 @@ boolean reverse = GetterUtil.getBoolean(request.getAttribute("liferay-ui:input-p
 					<c:if test="<%= hasViewDefaultGroupRolePermission %>">
 						<c:choose>
 							<c:when test="<%= inputPermissionsViewRole.equals(defaultGroupRole.getName()) %>">
+
 								<%
 								optionSelected = true;
 								%>
+
 							</c:when>
 						</c:choose>
 
@@ -129,9 +131,11 @@ boolean reverse = GetterUtil.getBoolean(request.getAttribute("liferay-ui:input-p
 
 					<c:choose>
 						<c:when test="<%= inputPermissionsViewRole.equals(RoleConstants.OWNER) %>">
+
 							<%
 							optionSelected = true;
 							%>
+
 						</c:when>
 					</c:choose>
 
