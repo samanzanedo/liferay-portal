@@ -96,9 +96,19 @@ boolean reverse = GetterUtil.getBoolean(request.getAttribute("liferay-ui:input-p
 					}
 					%>
 
-					<option <%= inputPermissionsViewRole.equals(RoleConstants.GUEST) ? "selected=\"selected\"" : "" %> value="<%= RoleConstants.GUEST %>"><%= guestRoleLabel %></option>
+					<%
+					boolean optionSelected = false;
+					%>
 
 					<c:if test="<%= hasViewDefaultGroupRolePermission %>">
+						<c:choose>
+							<c:when test="<%= inputPermissionsViewRole.equals(defaultGroupRole.getName()) %>">
+								<%
+								optionSelected = true;
+								%>
+							</c:when>
+						</c:choose>
+
 						<option <%= inputPermissionsViewRole.equals(defaultGroupRole.getName()) ? "selected=\"selected\"" : "" %> value="<%= defaultGroupRole.getName() %>">
 							<c:choose>
 								<c:when test="<%= defaultGroupRole.getName().equals(RoleConstants.ORGANIZATION_USER) %>">
@@ -117,7 +127,24 @@ boolean reverse = GetterUtil.getBoolean(request.getAttribute("liferay-ui:input-p
 						</option>
 					</c:if>
 
+					<c:choose>
+						<c:when test="<%= inputPermissionsViewRole.equals(RoleConstants.OWNER) %>">
+							<%
+							optionSelected = true;
+							%>
+						</c:when>
+					</c:choose>
+
 					<option <%= inputPermissionsViewRole.equals(RoleConstants.OWNER) ? "selected=\"selected\"" : "" %> value="<%= RoleConstants.OWNER %>"><liferay-ui:message key="owner" /></option>
+
+					<c:choose>
+						<c:when test="<%= !optionSelected %>">
+							<option selected="selected" value="<%= RoleConstants.GUEST %>"><%= guestRoleLabel %></option>
+						</c:when>
+						<c:otherwise>
+							<option value="<%= RoleConstants.GUEST %>"><%= guestRoleLabel %></option>
+						</c:otherwise>
+					</c:choose>
 				</select>
 
 				<div class="mt-3 <%= inputPermissionsShowOptions ? "hide" : "" %>" id="<%= uniqueNamespace %>inputPermissionsShowOptionsLink">
