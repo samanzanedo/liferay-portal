@@ -66,8 +66,8 @@ SortPortletInstanceConfiguration sortPortletInstanceConfiguration = sortDisplayC
 			>
 				<aui:fieldset>
 					<aui:select class="sort-term" label="sort-by" name="sortSelection">
-
-						<% boolean isSelected = false;
+						<% 
+						boolean isSelected = false;
 						
 						for (SortTermDisplayContext sortTermDisplayContext : sortDisplayContext.getSortTermDisplayContexts()) {
 							if (sortTermDisplayContext.isSelected()) {
