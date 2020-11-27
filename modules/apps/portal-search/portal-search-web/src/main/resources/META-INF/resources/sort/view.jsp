@@ -66,6 +66,7 @@ SortPortletInstanceConfiguration sortPortletInstanceConfiguration = sortDisplayC
 			>
 				<aui:fieldset>
 					<aui:select class="sort-term" label="sort-by" name="sortSelection">
+
 						<% 
 						boolean isSelected = false;
 						
@@ -83,7 +84,7 @@ SortPortletInstanceConfiguration sortPortletInstanceConfiguration = sortDisplayC
 						if (!isSelected) {
 						%>
 
-							<aui:option label="sort-default-order" selected="true" disabled="true" />
+							<aui:option disabled="true" label="sort-default-order" selected="true" />
 
 						<%
 						} 
