@@ -31,12 +31,26 @@ public class OrganizationLocalServiceWrapper
 		_organizationLocalService = organizationLocalService;
 	}
 
+	/**
+	 * Adds the organization to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organizationId the primary key of the organization
+	 * @return <code>true</code> if the association between the ${groupId} and ${organizationId} is added; <code>false</code> if it was already added
+	 */
 	@Override
 	public boolean addGroupOrganization(long groupId, long organizationId) {
 		return _organizationLocalService.addGroupOrganization(
 			groupId, organizationId);
 	}
 
+	/**
+	 * Adds the organization to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organization the organization
+	 * @return <code>true</code> if the association between the ${groupId} and ${organization} is added; <code>false</code> if it was already added
+	 */
 	@Override
 	public boolean addGroupOrganization(
 		long groupId, Organization organization) {
@@ -45,6 +59,13 @@ public class OrganizationLocalServiceWrapper
 			groupId, organization);
 	}
 
+	/**
+	 * Adds the organizations to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organizations the organizations
+	 * @return <code>true</code> if at least an association between the ${groupId} and the ${organizations} is added; <code>false</code> if all were already added
+	 */
 	@Override
 	public boolean addGroupOrganizations(
 		long groupId, java.util.List<Organization> organizations) {
@@ -53,6 +74,13 @@ public class OrganizationLocalServiceWrapper
 			groupId, organizations);
 	}
 
+	/**
+	 * Adds the organizations to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organizationIds the primary keys of the organizations
+	 * @return <code>true</code> if at least an association between the ${groupId} and the ${organizationIds} is added; <code>false</code> if all were already added
+	 */
 	@Override
 	public boolean addGroupOrganizations(long groupId, long[] organizationIds) {
 		return _organizationLocalService.addGroupOrganizations(
@@ -122,6 +150,20 @@ public class OrganizationLocalServiceWrapper
 		return _organizationLocalService.addOrganization(
 			userId, parentOrganizationId, name, type, regionId, countryId,
 			statusListTypeId, comments, site, serviceContext);
+	}
+
+	@Override
+	public Organization addOrganization(
+			long userId, long parentOrganizationId,
+			String externalReferenceCode, String name, String type,
+			long regionId, long countryId, long statusListTypeId,
+			String comments, boolean site, ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _organizationLocalService.addOrganization(
+			userId, parentOrganizationId, externalReferenceCode, name, type,
+			regionId, countryId, statusListTypeId, comments, site,
+			serviceContext);
 	}
 
 	/**
@@ -197,14 +239,12 @@ public class OrganizationLocalServiceWrapper
 
 	@Override
 	public boolean addUserOrganization(long userId, long organizationId) {
-		return _organizationLocalService.addUserOrganization(
-			userId, organizationId);
+		return _organizationLocalService.addUserOrganization(userId, organizationId);
 	}
 
 	@Override
 	public boolean addUserOrganization(long userId, Organization organization) {
-		return _organizationLocalService.addUserOrganization(
-			userId, organization);
+		return _organizationLocalService.addUserOrganization(userId, organization);
 	}
 
 	@Override
@@ -220,14 +260,12 @@ public class OrganizationLocalServiceWrapper
 	public boolean addUserOrganizations(
 		long userId, java.util.List<Organization> organizations) {
 
-		return _organizationLocalService.addUserOrganizations(
-			userId, organizations);
+		return _organizationLocalService.addUserOrganizations(userId, organizations);
 	}
 
 	@Override
 	public boolean addUserOrganizations(long userId, long[] organizationIds) {
-		return _organizationLocalService.addUserOrganizations(
-			userId, organizationIds);
+		return _organizationLocalService.addUserOrganizations(userId, organizationIds);
 	}
 
 	@Override
