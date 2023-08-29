@@ -35,24 +35,53 @@ public class OrganizationLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.liferay.portal.service.impl.OrganizationLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+
+	/**
+	 * Adds the organization to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organizationId the primary key of the organization
+	 * @return <code>true</code> if the association between the ${groupId} and ${organizationId} is added; <code>false</code> if it was already added
+	 */
 	public static boolean addGroupOrganization(
 		long groupId, long organizationId) {
 
 		return getService().addGroupOrganization(groupId, organizationId);
 	}
 
+	/**
+	 * Adds the organization to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organization the organization
+	 * @return <code>true</code> if the association between the ${groupId} and ${organization} is added; <code>false</code> if it was already added
+	 */
 	public static boolean addGroupOrganization(
 		long groupId, Organization organization) {
 
 		return getService().addGroupOrganization(groupId, organization);
 	}
 
+	/**
+	 * Adds the organizations to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organizations the organizations
+	 * @return <code>true</code> if at least an association between the ${groupId} and the ${organizations} is added; <code>false</code> if all were already added
+	 */
 	public static boolean addGroupOrganizations(
 		long groupId, List<Organization> organizations) {
 
 		return getService().addGroupOrganizations(groupId, organizations);
 	}
 
+	/**
+	 * Adds the organizations to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organizationIds the primary keys of the organizations
+	 * @return <code>true</code> if at least an association between the ${groupId} and the ${organizationIds} is added; <code>false</code> if all were already added
+	 */
 	public static boolean addGroupOrganizations(
 		long groupId, long[] organizationIds) {
 
@@ -122,6 +151,19 @@ public class OrganizationLocalServiceUtil {
 			statusListTypeId, comments, site, serviceContext);
 	}
 
+	public static Organization addOrganization(
+			long userId, long parentOrganizationId,
+			String externalReferenceCode, String name, String type,
+			long regionId, long countryId, long statusListTypeId,
+			String comments, boolean site, ServiceContext serviceContext)
+		throws PortalException {
+
+		return getService().addOrganization(
+			userId, parentOrganizationId, externalReferenceCode, name, type,
+			regionId, countryId, statusListTypeId, comments, site,
+			serviceContext);
+	}
+
 	/**
 	 * Adds the organization to the database. Also notifies the appropriate model listeners.
 	 *
@@ -188,16 +230,14 @@ public class OrganizationLocalServiceUtil {
 			passwordPolicyId, organizationIds);
 	}
 
-	public static boolean addUserOrganization(
-		long userId, long organizationId) {
-
-		return getService().addUserOrganization(userId, organizationId);
+	public static void addUserOrganization(long userId, long organizationId) {
+		getService().addUserOrganization(userId, organizationId);
 	}
 
-	public static boolean addUserOrganization(
+	public static void addUserOrganization(
 		long userId, Organization organization) {
 
-		return getService().addUserOrganization(userId, organization);
+		getService().addUserOrganization(userId, organization);
 	}
 
 	public static void addUserOrganizationByEmailAddress(
@@ -208,16 +248,16 @@ public class OrganizationLocalServiceUtil {
 			emailAddress, organizationId);
 	}
 
-	public static boolean addUserOrganizations(
+	public static void addUserOrganizations(
 		long userId, List<Organization> organizations) {
 
-		return getService().addUserOrganizations(userId, organizations);
+		getService().addUserOrganizations(userId, organizations);
 	}
 
-	public static boolean addUserOrganizations(
+	public static void addUserOrganizations(
 		long userId, long[] organizationIds) {
 
-		return getService().addUserOrganizations(userId, organizationIds);
+		getService().addUserOrganizations(userId, organizationIds);
 	}
 
 	public static void clearGroupOrganizations(long groupId) {

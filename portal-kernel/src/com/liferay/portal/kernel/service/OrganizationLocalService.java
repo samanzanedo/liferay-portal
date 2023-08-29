@@ -65,14 +65,43 @@ public interface OrganizationLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.liferay.portal.service.impl.OrganizationLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the organization local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link OrganizationLocalServiceUtil} if injection and service tracking are not available.
 	 */
+
+	/**
+	 * Adds the organization to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organizationId the primary key of the organization
+	 * @return <code>true</code> if the association between the ${groupId} and ${organizationId} is added; <code>false</code> if it was already added
+	 */
 	public boolean addGroupOrganization(long groupId, long organizationId);
 
+	/**
+	 * Adds the organization to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organization the organization
+	 * @return <code>true</code> if the association between the ${groupId} and ${organization} is added; <code>false</code> if it was already added
+	 */
 	public boolean addGroupOrganization(
 		long groupId, Organization organization);
 
+	/**
+	 * Adds the organizations to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organizations the organizations
+	 * @return <code>true</code> if at least an association between the ${groupId} and the ${organizations} is added; <code>false</code> if all were already added
+	 */
 	public boolean addGroupOrganizations(
 		long groupId, List<Organization> organizations);
 
+	/**
+	 * Adds the organizations to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param organizationIds the primary keys of the organizations
+	 * @return <code>true</code> if at least an association between the ${groupId} and the ${organizationIds} is added; <code>false</code> if all were already added
+	 */
 	public boolean addGroupOrganizations(long groupId, long[] organizationIds);
 
 	/**
@@ -129,6 +158,13 @@ public interface OrganizationLocalService
 			String comments, boolean site, ServiceContext serviceContext)
 		throws PortalException;
 
+	public Organization addOrganization(
+			long userId, long parentOrganizationId,
+			String externalReferenceCode, String name, String type,
+			long regionId, long countryId, long statusListTypeId,
+			String comments, boolean site, ServiceContext serviceContext)
+		throws PortalException;
+
 	/**
 	 * Adds the organization to the database. Also notifies the appropriate model listeners.
 	 *
@@ -175,18 +211,18 @@ public interface OrganizationLocalService
 	public void addPasswordPolicyOrganizations(
 		long passwordPolicyId, long[] organizationIds);
 
-	public boolean addUserOrganization(long userId, long organizationId);
+	public void addUserOrganization(long userId, long organizationId);
 
-	public boolean addUserOrganization(long userId, Organization organization);
+	public void addUserOrganization(long userId, Organization organization);
 
 	public void addUserOrganizationByEmailAddress(
 			String emailAddress, long organizationId)
 		throws PortalException;
 
-	public boolean addUserOrganizations(
+	public void addUserOrganizations(
 		long userId, List<Organization> organizations);
 
-	public boolean addUserOrganizations(long userId, long[] organizationIds);
+	public void addUserOrganizations(long userId, long[] organizationIds);
 
 	public void clearGroupOrganizations(long groupId);
 
