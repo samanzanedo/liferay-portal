@@ -276,6 +276,18 @@ public class OrganizationLocalServiceImpl
 			String comments, boolean site, ServiceContext serviceContext)
 		throws PortalException {
 
+		return addOrganization(
+			userId, parentOrganizationId, null, name, type, regionId, countryId,
+			statusListTypeId, comments, site, serviceContext);
+	}
+
+	public Organization addOrganization(
+			long userId, long parentOrganizationId,
+			String externalReferenceCode, String name, String type,
+			long regionId, long countryId, long statusListTypeId,
+			String comments, boolean site, ServiceContext serviceContext)
+		throws PortalException {
+
 		// Organization
 
 		User user = _userPersistence.findByPrimaryKey(userId);
@@ -309,6 +321,7 @@ public class OrganizationLocalServiceImpl
 		organization.setStatusListTypeId(statusListTypeId);
 		organization.setComments(comments);
 		organization.setExpandoBridgeAttributes(serviceContext);
+		organization.setExternalReferenceCode(externalReferenceCode);
 
 		organization = organizationPersistence.update(organization);
 
