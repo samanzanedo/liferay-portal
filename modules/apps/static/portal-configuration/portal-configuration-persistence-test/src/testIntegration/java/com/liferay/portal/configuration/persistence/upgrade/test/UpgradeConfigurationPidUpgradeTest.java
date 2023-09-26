@@ -314,19 +314,19 @@ public class UpgradeConfigurationPidUpgradeTest {
 	private void _testUpgradeConfigurationWithLongServicePid()
 		throws Exception {
 
-		Dictionary<String, String> dictionary = HashMapDictionaryBuilder.put(
-			FileInstallConstants.FELIX_FILE_INSTALL_FILENAME,
-			_SERVICE_FACTORY_PID + ".default.config"
-		).put(
-			"service.factoryPid", _SERVICE_FACTORY_PID
-		).put(
-			"service.pid", _SERVICE_FACTORY_PID
-		).build();
-
 		UnsyncByteArrayOutputStream unsyncByteArrayOutputStream =
 			new UnsyncByteArrayOutputStream();
 
-		ConfigurationHandler.write(unsyncByteArrayOutputStream, dictionary);
+		ConfigurationHandler.write(
+			unsyncByteArrayOutputStream,
+			HashMapDictionaryBuilder.put(
+				FileInstallConstants.FELIX_FILE_INSTALL_FILENAME,
+				_SERVICE_FACTORY_PID + ".default.config"
+			).put(
+				"service.factoryPid", _SERVICE_FACTORY_PID
+			).put(
+				"service.pid", _SERVICE_FACTORY_PID
+			).build());
 
 		try (Connection connection = DataAccess.getConnection();
 			PreparedStatement preparedStatement =
