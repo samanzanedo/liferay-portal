@@ -9,6 +9,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.file.install.constants.FileInstallConstants;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -313,22 +314,13 @@ public class UpgradeConfigurationPidUpgradeTest {
 	private void _testUpgradeConfigurationWithLongServicePid()
 		throws Exception {
 
-		String fileName = _SERVICE_FACTORY_PID + ".default.config";
-
-		String service_pid = _SERVICE_FACTORY_PID;
-
-		String long_service_pid = new String(
-			new char[512]
-		).replace(
-			'\0', 'P'
-		);
-
 		Dictionary<String, String> dictionary = HashMapDictionaryBuilder.put(
-			FileInstallConstants.FELIX_FILE_INSTALL_FILENAME, fileName
+			FileInstallConstants.FELIX_FILE_INSTALL_FILENAME,
+			_SERVICE_FACTORY_PID + ".default.config"
 		).put(
 			"service.factoryPid", _SERVICE_FACTORY_PID
 		).put(
-			"service.pid", service_pid
+			"service.pid", _SERVICE_FACTORY_PID
 		).build();
 
 		UnsyncByteArrayOutputStream unsyncByteArrayOutputStream =
@@ -343,13 +335,18 @@ public class UpgradeConfigurationPidUpgradeTest {
 					"insert into Configuration_ (configurationId, " +
 						"dictionary) values(?, ?)")) {
 
-			preparedStatement.setString(1, service_pid + ".instance1");
+			preparedStatement.setString(1, _SERVICE_FACTORY_PID + ".instance1");
 			preparedStatement.setString(
 				2, unsyncByteArrayOutputStream.toString());
 
 			preparedStatement.addBatch();
 
-			preparedStatement.setString(1, long_service_pid + ".instance1");
+			String longServicePid = new String(new char[512]);
+
+			longServicePid = StringUtil.replace(longServicePid, '\0', 'P');
+
+			preparedStatement.setString(1, longServicePid + ".instance1");
+
 			preparedStatement.setString(
 				2, unsyncByteArrayOutputStream.toString());
 
